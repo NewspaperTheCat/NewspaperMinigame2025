@@ -517,6 +517,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8cbf159b-2105-41f9-8724-1c631cd3af2f",
+                    "path": "<HID::DragonRise Inc.   Generic   USB  Joystick  >/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PS5",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e0d8dc48-016e-4c83-9284-86b0095c0f12",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -882,6 +893,17 @@
             "devices": [
                 {
                     "devicePath": "<HID::DragonRise Inc.   Generic   USB  Joystick  >",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "PS5",
+            "bindingGroup": "PS5",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
                 }

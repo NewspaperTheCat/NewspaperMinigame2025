@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "MinigameJamFramework.sln"
+    "dotnet.defaultSolution": "NewspaperMinigame2025.sln"
 }

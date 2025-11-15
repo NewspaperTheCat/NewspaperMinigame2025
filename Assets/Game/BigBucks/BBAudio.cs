@@ -12,31 +12,39 @@ namespace CountyFair.BigBucks {
             inst = this;
         }
 
-        [SerializeField] AudioClip bgMusicClip;
+        // [SerializeField] AudioClip bgMusicClip;
         AudioSource bgMusic;
         float loopDetector = -1;
         int loopCount = 0;
+        
+        float initailVolume;
 
         void Start() {
             bgMusic = GetComponent<AudioSource>();
+            initailVolume = bgMusic.volume;
         }
         
         void Update() {
 
-            if (!bgMusic.isPlaying) { // only when intro finishes
-                bgMusic.loop = true;
-                bgMusic.clip = bgMusicClip;
-                bgMusic.Play();
-            }
+            // if (!bgMusic.isPlaying) { // only when intro finishes
+            //     bgMusic.loop = true;
+            //     bgMusic.clip = bgMusicClip;
+            //     bgMusic.Play();
+            // }
 
 
-            // Used for pitch Scaling ----------------
-            // if (bgMusic.time < loopDetector) {
-            //     loopCount++;
+            if (bgMusic.time < loopDetector) {
+                loopCount++;
+                // Used for pitch Scaling ----------------
                 // bgMusic.pitch = 1 + loopCount / 10f;
                 // bgMusic.outputAudioMixerGroup.audioMixer.SetFloat("Pitch", 1f / bgMusic.pitch);
-            // }
-            // loopDetector = bgMusic.time;
+                bgMusic.time = 3.7f;
+            }
+            loopDetector = bgMusic.time;
+
+            if (bgMusic.volume != initailVolume) {
+                bgMusic.volume += (initailVolume - bgMusic.volume) * Time.deltaTime / 2;
+            }
         }
 
         [SerializeField] GameObject sfxPrefab;
@@ -60,6 +68,6 @@ namespace CountyFair.BigBucks {
 
         public void PlayRandomWrong() { PlayRandomSoundFromList(wrongClips); }
         public void PlayRandomCorrect() { PlayRandomSoundFromList(correctClips); }
-        public void PlayRandomBucked() { PlayRandomSoundFromList(buckedClips, .1f); }
+        public void PlayRandomBucked() { PlayRandomSoundFromList(buckedClips, .1f); bgMusic.volume = .2f; /**ducking**/ }
     }
 }

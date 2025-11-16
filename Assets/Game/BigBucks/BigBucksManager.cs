@@ -50,7 +50,7 @@ namespace CountyFair.BigBucks {
                 for (int i = 0; i < PlayerManager.GetNumPlayers(); i++) {
                     if (ranking[i] == 0) {
                         ranking[i] = 1; // set alive to first place
-                        winner = 1;
+                        winner = i;
                     }
                 }
                 // turn on spotlight whilee we wait

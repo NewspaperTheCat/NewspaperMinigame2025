@@ -56,6 +56,10 @@ namespace CountyFair.BigBucks {
 
         [SerializeField] List<AudioClip> buckedClips = new List<AudioClip>();
 
+        [SerializeField] List<AudioClip> victoryClips = new List<AudioClip>();
+
+        [SerializeField] List<AudioClip> dustClips = new List<AudioClip>();
+
         private void PlayRandomSoundFromList(List<AudioClip> list, float pitchRange = .125f)
         {
             AudioSource aus = Instantiate(sfxPrefab).GetComponent<AudioSource>();
@@ -69,5 +73,7 @@ namespace CountyFair.BigBucks {
         public void PlayRandomWrong() { PlayRandomSoundFromList(wrongClips); }
         public void PlayRandomCorrect() { PlayRandomSoundFromList(correctClips); }
         public void PlayRandomBucked() { PlayRandomSoundFromList(buckedClips, .1f); bgMusic.volume = .2f; /**ducking**/ }
+        public void PlayRandomVictory() { PlayRandomSoundFromList(victoryClips, 0f); bgMusic.enabled = false; }
+        public void PlayRandomDust() { PlayRandomSoundFromList(dustClips, .3f); }
     }
 }

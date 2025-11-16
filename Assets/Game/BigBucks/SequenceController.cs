@@ -23,7 +23,7 @@ namespace CountyFair.BigBucks {
         [SerializeField] GameObject indicatorPrefab;
 
         // index mappings
-        private List<String> indicatorIndices = new() { "ButtonA", "ButtonB", "ButtonL", "ButtonR" };
+        private List<String> indicatorIndices = new() { "ButtonL", "ButtonA", "ButtonB", "ButtonR" };
         [SerializeField] List<Sprite> indicatorSprites = new();
         [SerializeField] Transform start, end;
         private List<Transform> indicators = new();

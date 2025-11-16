@@ -13,21 +13,28 @@ MonoBehaviour:
   m_Name: BigBucks
   m_EditorClassIdentifier: 
   minigameName: Big Bucks
-  thumbnail: {fileID: 2125180737, guid: 742d1340c995d384e86ac5a6f0231dbb, type: 3}
+  thumbnail: {fileID: 21300000, guid: 6952cf296dce14141a743da26631b91a, type: 3}
   scene:
     m_SceneAsset: {fileID: 102900000, guid: d6407f005c992d741a13e6cabbfe5844, type: 3}
     m_SceneName: BigBucks
   minimumPlayers: 1
   description: 'Try to stay on the Mechanical
 
-    Bull as long as possible.
+    Bull as long as possible,
+
+    and
+    be the last one riding!
 
 
-    Be
-    the last one riding!'
+    Kick up dust to throw off
+
+    your opponents'
   controls: 'Press the displayed buttons when they are between the ropes
 
     <sprite
-    name="XBOX_A"> | <sprite name="XBOX_B"> | <sprite name="XBOX_LT"> | <sprite name="XBOX_RT">'
+    name="XBOX_A"> | <sprite name="XBOX_B"> | <sprite name="XBOX_LT"> | <sprite name="XBOX_RT">
+
+    Kick
+    Up Dust - <sprite name="XBOX_LEFT_STICK">'
   credits: Everything except the font - James Prendergst
   attributions: Thaleah Pixel Font - Unity Asset Store

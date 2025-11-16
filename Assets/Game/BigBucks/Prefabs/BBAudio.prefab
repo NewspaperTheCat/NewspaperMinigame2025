@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3bb3048905bc44fa4ad9f27fdca953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgMusicClip: {fileID: 8300000, guid: 7a4bc60da6b93304087f5cb5fa873e5d, type: 3}
   sfxPrefab: {fileID: 1899650484667704046, guid: e27add040dd018740a457d125f5d4d70, type: 3}
   wrongClips:
   - {fileID: 8300000, guid: 27c369b62fb6f8f49bf4f2b9ae2412a6, type: 3}
@@ -58,7 +57,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 807bd6b7bfd7b9c47a487d98d1b1fcd8, type: 3}
   - {fileID: 8300000, guid: 87ca1a672b7172742902c2d5d827667d, type: 3}
   buckedClips:
-  - {fileID: 8300000, guid: 3619a95b98f28574fb94ad875cdc9bd2, type: 3}
+  - {fileID: 8300000, guid: fff27755df256d74e9d5d56cabba241b, type: 3}
+  victoryClips:
+  - {fileID: 8300000, guid: c4fb20aae2737ec4f86406f6545217cf, type: 3}
+  dustClips:
+  - {fileID: 8300000, guid: 05b07b7c8f1c69044afd591cee5bc982, type: 3}
+  - {fileID: 8300000, guid: 6943da665bab8a048aaf83ac4b57719b, type: 3}
+  - {fileID: 8300000, guid: 4d4eb67ea0371624fbf8e37b6a1c1981, type: 3}
+  - {fileID: 8300000, guid: 9f494eb43a264734bbfbdbeed889c27c, type: 3}
 --- !u!82 &4335982096778046355
 AudioSource:
   m_ObjectHideFlags: 0
@@ -69,7 +75,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: cfa52d73edfaf85419028dc69bee4109, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 7a4bc60da6b93304087f5cb5fa873e5d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2d90f4aca1798aa4f8b2477b62425ae8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.625
   m_Pitch: 1

@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using Game.Examples;
 using Unity.VisualScripting;
+using Game.MinigameFramework.Scripts.Framework.PlayerInfo;
 
 namespace CountyFair.BigBucks {
     public class BullRiderPawn : Pawn {
@@ -31,6 +32,7 @@ namespace CountyFair.BigBucks {
             set { _instability = Math.Clamp(value, 0, fallThreshold); }
         }
         [SerializeField] int staggerThreshold = 5;
+        float staggerStart;
         [SerializeField] int fallThreshold = 10;
         public bool fallen = false;
 
@@ -39,13 +41,20 @@ namespace CountyFair.BigBucks {
 
         // Effects
         [SerializeField] ParticleSystem sweatBurst, passiveSweat;
+        [SerializeField] ParticleSystem leftDust, rightDust;
 
 
         void Start() {
             buckTimeAlignment = Mathf.PI - sc.indicatorDuration - sc.spawnInterval;
             ChangeBullDir();
+            SetToPlayerColor();
         }
 
+        Color[] playerColors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
+        private void SetToPlayerColor() {
+            if (playerIndex < 0 || playerIndex > 3) return;
+            playerRenderer.color = playerColors[playerIndex];
+        }
 
         void Update() {
             buckTimer += Time.deltaTime / sc.indicatorDuration / sc.spawnInterval;
@@ -53,6 +62,11 @@ namespace CountyFair.BigBucks {
 
             bullAngle = (360 + bullAngle + angularVel * Time.deltaTime) % 360;
             angularVel -= angularVel * Time.deltaTime;
+
+            if (instability <= staggerThreshold) {
+                staggerStart = Time.time;   
+            }
+            playerRenderer.transform.eulerAngles = Vector3.forward * Mathf.Sin((Time.time - staggerStart) * 4 * Mathf.PI) * 30;
         }
 
         void LateUpdate() {
@@ -62,6 +76,7 @@ namespace CountyFair.BigBucks {
         private void UpdateSprites() {
             // Update bullRenderer sprite based on buck and rotation
             int bullSpriteFrame = 0;
+            int playerSprite = 0;
 
             // Map Angles to Frames
             float angleOffset = bullAngle + 22.5f;
@@ -108,9 +123,41 @@ namespace CountyFair.BigBucks {
                 float quantizedBuck = Mathf.Round(buck * 3f) / 3f;
                 playerRenderer.transform.position += Vector3.up * (quantizedBuck * .5f + .75f) - Vector3.up * playerRenderer.transform.position.y;
 
+                int playerSpriteIndex = 0;
+                // Doing this again for player (don't want to mess with the player if fallen)
+                if (angleOffset < 45) { // EAST
+                    playerSpriteIndex = 0;
+                    playerRenderer.flipX = false;
+                } else if (angleOffset < 90) { // NORTH EAST
+                    playerSpriteIndex = 1;
+                    playerRenderer.flipX = false;
+                } else if (angleOffset < 135) { // NORTH
+                    playerSpriteIndex = 2;
+                    playerRenderer.flipX = false;
+                } else if (angleOffset < 180) { // NORTH WEST
+                    playerSpriteIndex = 1;
+                    playerRenderer.flipX = true;
+                } else if (angleOffset < 225) { // WEST
+                    playerSpriteIndex = 0;
+                    playerRenderer.flipX = true;
+                } else if (angleOffset < 270) { // SOUTH WEST
+                    playerSpriteIndex = 3;
+                    playerRenderer.flipX = false;
+                } else if (angleOffset < 315) { // SOUTH
+                    playerSpriteIndex = 4;
+                    playerRenderer.flipX = false;
+                } else if (angleOffset < 360) { // SOUTH EAST
+                    playerSpriteIndex = 3;
+                    playerRenderer.flipX = true;
+                } else { // EAST (from other side)
+                    playerSpriteIndex = 0;
+                    playerRenderer.flipX = false;
+                }
+                playerRenderer.sprite = playerSprites[playerSpriteIndex];
+
                 // Update ordering
                 bool playerOnTop = false;
-                if (bullSpriteFrame == 0) {
+                if (playerSprite == 0 || playerSprite == 3) {
                     playerOnTop = true;
                 } else if (angleOffset >= 225 && angleOffset < 360) { // facing at least somewhat south
                     playerOnTop = bullSpriteBuck >= 1;
@@ -136,16 +183,14 @@ namespace CountyFair.BigBucks {
             if (fallen) return;
             String input = context.action.name;
 
+            if (input == "Move") KickUpDust(context.ReadValue<Vector2>());
+
             if (input == PawnAction.ButtonX) input = PawnAction.ButtonB;
             else if (input == PawnAction.ButtonY) input = PawnAction.ButtonA;
             else if (!(input == PawnAction.ButtonA
                 || input == PawnAction.ButtonB
                 || input == PawnAction.ButtonL
                 || input == PawnAction.ButtonR)) return;
-
-
-            Debug.Log(input);
-
 
             int outcome = sc.EvaluateInput(input);
             if (outcome > 0) {
@@ -165,11 +210,11 @@ namespace CountyFair.BigBucks {
             if (instability >= fallThreshold) {
                 Fall();
             } else if (instability > staggerThreshold) {
-                playerRenderer.color = Color.red;
+                // playerRenderer.color = Color.red;
 
                 ParticleSystem.EmissionModule em = passiveSweat.emission;
-                em.rateOverTimeMultiplier = 4;
-                em.rateOverDistanceMultiplier = 4;
+                em.rateOverTimeMultiplier = 5;
+                em.rateOverDistanceMultiplier = 5;
             }
         }
 
@@ -178,7 +223,7 @@ namespace CountyFair.BigBucks {
             BBAudio.inst.PlayRandomCorrect();
 
             if (instability <= staggerThreshold) {
-                playerRenderer.color = Color.white;
+                SetToPlayerColor();
 
                 ParticleSystem.EmissionModule em = passiveSweat.emission;
                 em.rateOverTimeMultiplier = 1;
@@ -196,14 +241,35 @@ namespace CountyFair.BigBucks {
             bullRenderer.sortingOrder = 2;
             playerRenderer.sortingOrder = 3;
 
-            BBAudio.inst.PlayRandomBucked();
             BigBucksManager.inst.PlayerFalls(playerIndex);
+            if (!BigBucksManager.inst.gameEnded) BBAudio.inst.PlayRandomBucked();
+        }
+
+        public void SilentDisable() {
+            fallen = true;
+            playerRenderer.enabled = false;
         }
         
         private void ChangeBullDir() {
             // magnitude * random direction
             angularVel = UnityEngine.Random.Range(480f, 720f) * (UnityEngine.Random.Range(0, 2) * 2 - 1);
             Invoke("ChangeBullDir", UnityEngine.Random.Range(.5f, 2f));
+        }
+
+        int nextDustDir = 0;
+        public void KickUpDust(Vector2 movement) {
+            int sign = Math.Sign(Vector2.SignedAngle(Vector2.up, movement));
+            if (nextDustDir == 0 || sign == nextDustDir) {
+                nextDustDir = sign * -1;
+
+                // kick up dust in indicated direction
+                if (sign == -1) {
+                    rightDust.Play();
+                } else {
+                    leftDust.Play();
+                }
+                BBAudio.inst.PlayRandomDust();
+            }
         }
     }
 }

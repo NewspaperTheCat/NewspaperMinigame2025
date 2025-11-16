@@ -32,7 +32,7 @@ namespace CountyFair.BigBucks {
         }
         [SerializeField] int staggerThreshold = 5;
         [SerializeField] int fallThreshold = 10;
-        [SerializeField] bool fallen = false;
+        public bool fallen = false;
 
         // Project Communication
         [SerializeField] SequenceController sc;
@@ -149,7 +149,7 @@ namespace CountyFair.BigBucks {
 
             int outcome = sc.EvaluateInput(input);
             if (outcome > 0) {
-                InputSucceeded();
+                InputSucceeded(outcome);
             } else if (outcome < 0) {
                 InputFailed();
             } // ignore on outcome = 0
@@ -173,8 +173,8 @@ namespace CountyFair.BigBucks {
             }
         }
 
-        private void InputSucceeded() {
-            instability -= 1; // rewards for success, regain control
+        private void InputSucceeded(int outcome) {
+            instability -= outcome; // rewards for success, regain control (more if did better)
             BBAudio.inst.PlayRandomCorrect();
 
             if (instability <= staggerThreshold) {

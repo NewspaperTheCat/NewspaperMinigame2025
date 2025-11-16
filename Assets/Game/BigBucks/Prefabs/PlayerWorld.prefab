@@ -481,6 +481,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  player: {fileID: 2668040964489234109}
   indicatorDuration: 2.5
   indicatorPrefab: {fileID: 5663446093629279042, guid: 8b6a6c7f2c5c1064a9b3202984468cac, type: 3}
   indicatorSprites:
@@ -492,6 +493,9 @@ MonoBehaviour:
   end: {fileID: 3470298065804839827}
   spawnInterval: 2
   inputWindow: 1.125
+  earlyPopUp: {fileID: 1130605186000645026, guid: ba2a94a15bcaa134596562136c6ae772, type: 3}
+  missedPopUp: {fileID: 1130605186000645026, guid: 1141f51922a40c446936242054458a58, type: 3}
+  juicePopUp: {fileID: 1130605186000645026, guid: 24534991bdf27804aa3c2df1cedad056, type: 3}
 --- !u!1 &4716116386428584524
 GameObject:
   m_ObjectHideFlags: 0

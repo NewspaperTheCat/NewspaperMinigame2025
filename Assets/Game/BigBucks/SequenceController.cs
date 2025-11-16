@@ -6,6 +6,7 @@ using Game.MinigameFramework.Scripts.Framework.PlayerInfo;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace CountyFair.BigBucks {
     public class SequenceController : MonoBehaviour {
@@ -13,6 +14,7 @@ namespace CountyFair.BigBucks {
         // Player Binding
         public int playerIndex;
         public UnityEvent playerMissed;
+        public BullRiderPawn player;
 
         // Indicator display
         [Header("Sequence Display")]
@@ -30,6 +32,7 @@ namespace CountyFair.BigBucks {
         [Header("Sequence Interaction")]
         public float spawnInterval;
         [SerializeField] float inputWindow;
+        [SerializeField] GameObject earlyPopUp, missedPopUp, juicePopUp;
         
         void Start() {
             indicatorSpeed = Vector2.Distance(end.position, start.position) / indicatorDuration;
@@ -37,6 +40,7 @@ namespace CountyFair.BigBucks {
         }
         
         void SpawnIndicatorLoop() {
+            if (player.fallen) return; // stop spawning if the player is dead
             SpawnIndicator();
 
             spawnInterval *= .985f;
@@ -61,6 +65,7 @@ namespace CountyFair.BigBucks {
                 // Check for if missed opportunity
                 if (end.position.y > ind.position.y) {
                     playerMissed.Invoke();
+                    DisplayPopUp("missed", ind.position);
                     indicators.RemoveAt(i);
                     Destroy(ind.gameObject);
                     i--;
@@ -93,11 +98,24 @@ namespace CountyFair.BigBucks {
             if (distance > inputWindow * 2) {
                 validity = 0;
             } else if (distance > inputWindow) {
-                Debug.Log("Too Early");
+                DisplayPopUp("early", indicators[0].position);
                 PopIndicator();
                 validity = -1;
             } else {
-                Debug.Log("Correct!");
+                float percision = Mathf.Abs(distance - inputWindow * .5f);
+                String message = "Whoopsie, you aren't meant to see this!";
+                if (percision < inputWindow / 2f * .2f) {
+                    message = "Amazing";
+                    validity = 2; // really good, recovers more
+                } else if (percision < inputWindow / 2f * .6f) {
+                    message = "Nice";
+                    validity = 1;
+                } else {
+                    message = "OK";
+                    validity = 1;
+                }
+
+                DisplayPopUp(message, indicators[0].position);
                 PopIndicator();
                 validity = 1;
             }
@@ -107,6 +125,18 @@ namespace CountyFair.BigBucks {
         private void PopIndicator() {
             Destroy(indicators[0].gameObject);
             indicators.RemoveAt(0);
+        }
+
+        private void DisplayPopUp(String type, Vector2 where) {
+            GameObject prefab = juicePopUp;
+            if (type == "early") prefab = earlyPopUp;
+            if (type == "missed") prefab = missedPopUp;
+            
+            GameObject created = Instantiate(prefab, where, Quaternion.identity, transform);
+
+            if (prefab == juicePopUp) {
+                created.GetComponent<PopUpBehavior>().SetMessage(type);
+            }
         }
     }
 }
